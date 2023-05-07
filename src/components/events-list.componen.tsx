@@ -1,20 +1,20 @@
 import { FC } from "react";
-import { useGetEventsQuery } from "../api/events";
+import { Event } from "../api/dto/get-event-response.dto";
 import { EventCard } from "./event-card.component";
 
-interface EventsListProps {}
+interface EventsListProps {
+  events: Event[];
+}
 
-export const EventsList: FC<EventsListProps> = ({}) => {
-  const events = useGetEventsQuery({});
-
-  if (events.isLoading) {
-    return <div>Loading...</div>;
-  }
-
+export const EventsList: FC<EventsListProps> = ({ events }) => {
   return (
     <div className="row">
-      {events.data?.map((event) => (
-        <EventCard eventId={event.id} thumb={event.thumb} />
+      {events.map((event) => (
+        <EventCard
+          key={`event-${event.id}`}
+          eventId={event.id}
+          thumb={event.thumb}
+        />
       ))}
     </div>
   );

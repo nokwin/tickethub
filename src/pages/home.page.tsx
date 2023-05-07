@@ -1,21 +1,26 @@
 import { FC } from "react";
-import { Link } from "react-router-dom";
+import { useGetEventsQuery } from "../api/events";
 import { EventsList } from "../components/events-list.componen";
+import { Layout } from "../components/layout.component";
 
 interface HomePageProps {}
 
 export const HomePage: FC<HomePageProps> = ({}) => {
+  const events = useGetEventsQuery({});
+
+  if (events.isLoading) {
+    return (
+      <Layout>
+        <div>Loading...</div>
+      </Layout>
+    );
+  }
+
   return (
-    <div className="container">
-      <h3>
-        <strong>
-          <Link to="/">Challenge Tickets</Link>
-        </strong>
-      </h3>
-      <hr />
+    <Layout>
       <h4>Select an event</h4>
       <hr />
-      <EventsList />
-    </div>
+      <EventsList events={events.data || []} />
+    </Layout>
   );
 };
