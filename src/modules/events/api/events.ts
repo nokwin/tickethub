@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { config } from "../core/config";
+import { config } from "../../../core/config";
 import { GetEventResponseDto } from "./dto/get-event-response.dto";
 import { GetSingleEventResponseDto } from "./dto/get-single-event-response.dto";
 import { GetSectorResponseDto } from "./dto/get-sector-response.dto";

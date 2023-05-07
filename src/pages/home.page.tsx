@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useGetEventsQuery } from "../api/events";
-import { EventsList } from "../components/events-list.componen";
+import { useGetEventsQuery } from "../modules/events/api/events";
+import { EventsList } from "../modules/events/components/events-list.componen";
 import { Layout } from "../components/layout.component";
 
 interface HomePageProps {}

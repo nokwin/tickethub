@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useGetSingleEventQuery } from "../api/events";
+import { useGetSingleEventQuery } from "../modules/events/api/events";
 import { Layout } from "../components/layout.component";
 
 interface EventPageProps {}
