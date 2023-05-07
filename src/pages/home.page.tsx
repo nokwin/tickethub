@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useGetEventsQuery } from "../modules/events/api/events";
+import { useGetEventsQuery } from "../modules/events/api/repository";
 import { EventsList } from "../modules/events/components/events-list.componen";
 import { Layout } from "../components/layout.component";
 
