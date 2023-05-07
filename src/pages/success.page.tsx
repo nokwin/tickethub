@@ -62,7 +62,7 @@ export const SuccessPage: FC<SuccessPageProps> = ({}) => {
           <div className="media-left">
             {" "}
             <img
-              src={event.data?.thubm}
+              src={event.data?.thumb}
               width="150"
               className="media-object"
             />{" "}
