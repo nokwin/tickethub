@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -25,15 +25,19 @@ export const EventForm: FC<EventFormProps> = ({}) => {
   const params = useParams();
   const navigate = useNavigate();
 
-  const event = useGetSingleEventQuery(Number(params.id));
-  const [triggerSectorsQuery, sectors] = useLazyGetSectorsByEventQuery();
-  const [triggerRateQuery, rates] = useLazyGetRateBySectorQuery();
-
   const dispatch = useDispatch();
   const selectedDate = useSelector(getSelectedDate);
   const selectedSector = useSelector(getSelectedSector);
   const selectedRate = useSelector(getSelectedRate);
   const selectedQuantity = useSelector(getSelectedQuantity);
+
+  const event = useGetSingleEventQuery(Number(params.id));
+  const [triggerSectorsQuery, sectors] = useLazyGetSectorsByEventQuery();
+  const [triggerRateQuery, rates] = useLazyGetRateBySectorQuery();
+  useEffect(() => {
+    triggerSectorsQuery(Number(selectedDate?.id), true);
+    triggerRateQuery(Number(selectedSector?.id), true);
+  }, []);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const eventId = Number(e.target.value);
