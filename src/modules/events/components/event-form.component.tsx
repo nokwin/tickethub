@@ -92,7 +92,7 @@ export const EventForm: FC<EventFormProps> = ({}) => {
           <select
             className="form-control"
             onChange={handleDateChange}
-            value={String(selectedDate)}
+            value={String(selectedDate?.id)}
           >
             <option value="">Date</option>
             {event.data?.dates.map((date) => (
@@ -109,7 +109,7 @@ export const EventForm: FC<EventFormProps> = ({}) => {
             className="form-control"
             disabled={!selectedDate}
             onChange={handleSectorChange}
-            value={String(selectedSector)}
+            value={String(selectedSector?.id)}
           >
             <option value="">Sector</option>
             {sectors.data?.map((sector) => (

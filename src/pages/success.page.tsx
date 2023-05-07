@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Layout } from "../components/layout.component";
 import { useGetSingleEventQuery } from "../modules/events/api/repository";
 import {
-  getChosenEventId,
+  getChoosenEventId,
   getEventConfrimationCode,
   getSelectedDate,
   getSelectedQuantity,
@@ -18,7 +18,7 @@ export const SuccessPage: FC<SuccessPageProps> = ({}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const choosenEventId = useSelector(getChosenEventId);
+  const choosenEventId = useSelector(getChoosenEventId);
   const selectedDate = useSelector(getSelectedDate);
   const selectedSector = useSelector(getSelectedSector);
   const selectedQuantity = useSelector(getSelectedQuantity);

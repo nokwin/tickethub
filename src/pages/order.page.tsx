@@ -10,7 +10,7 @@ import {
   useGetSingleEventQuery,
 } from "../modules/events/api/repository";
 import {
-  getChosenEventId,
+  getChoosenEventId,
   getSelectedQuantity,
   getSelectedRate,
 } from "../modules/events/store/selectors";
@@ -36,11 +36,11 @@ export const OrderPage: FC<OrderPageProps> = ({}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const choosenEventId = useSelector(getChosenEventId);
+  const choosenEventId = useSelector(getChoosenEventId);
   const selectedRate = useSelector(getSelectedRate);
   const selectedQuantity = useSelector(getSelectedQuantity);
   useEffect(() => {
-    if (!choosenEventId || !selectedRate || !selectedQuantity) {
+    if (!choosenEventId || !selectedRate?.id || !selectedQuantity) {
       navigate("/", { replace: true });
     }
   }, []);
