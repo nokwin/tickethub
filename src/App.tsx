@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { EventPage } from "./pages/event.page";
 import { HomePage } from "./pages/home.page";
 import { store } from "./store";
 
@@ -12,6 +13,7 @@ export const App: FC<AppProps> = ({}) => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/event/:id" element={<EventPage />} />
         </Routes>
       </BrowserRouter>
     </Provider>
