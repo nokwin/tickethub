@@ -71,6 +71,7 @@ export const eventOrderSlice = createSlice({
     setConfirmationCode: (state, action: PayloadAction<string | null>) => {
       state.confirmationCode = action.payload;
     },
+    cleanEventOrderState: () => initialState,
   },
 });
 
@@ -82,6 +83,7 @@ export const {
   setEventQuantity,
   setEventId,
   setConfirmationCode,
+  cleanEventOrderState,
 } = eventOrderSlice.actions;
 
 export const { reducer: eventOrderReducer } = eventOrderSlice;

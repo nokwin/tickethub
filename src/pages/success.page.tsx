@@ -10,6 +10,7 @@ import {
   getSelectedQuantity,
   getSelectedSector,
 } from "../modules/events/store/selectors";
+import { cleanEventOrderState } from "../modules/events/store/slice";
 
 interface SuccessPageProps {}
 
@@ -32,6 +33,11 @@ export const SuccessPage: FC<SuccessPageProps> = ({}) => {
     ) {
       navigate("/", { replace: true });
     }
+  }, []);
+  useEffect(() => {
+    return () => {
+      dispatch(cleanEventOrderState());
+    };
   }, []);
 
   const event = useGetSingleEventQuery(choosenEventId || 0, {
