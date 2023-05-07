@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
@@ -54,13 +54,19 @@ export const EventForm: FC<EventFormProps> = ({}) => {
 
   const handleRateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const rateId = Number(e.target.value);
-    dispatch(setEventRate(rateId));
+    const maxQuantity =
+      rates.data?.find((rate) => rate.id === rateId)?.max || 0;
+    dispatch(setEventRate({ id: rateId, max: maxQuantity }));
   };
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const quantity = Number(e.target.value);
     dispatch(setEventQuantity(quantity));
   };
+
+  const quantityOptions = useMemo(() => {
+    return new Array(selectedRate?.max || 0).fill(0);
+  }, [selectedRate?.max]);
 
   return (
     <div className="row">
@@ -103,12 +109,12 @@ export const EventForm: FC<EventFormProps> = ({}) => {
             className="form-control"
             disabled={!selectedSector}
             onChange={handleRateChange}
-            value={String(selectedRate)}
+            value={String(selectedRate?.id)}
           >
             <option value="">Rate</option>
             {rates.data?.map((rate) => (
               <option key={`rate-${rate.id}`} value={rate.id}>
-                {rate.name}
+                {rate.name} | {rate.price}
               </option>
             ))}
           </select>
@@ -123,11 +129,14 @@ export const EventForm: FC<EventFormProps> = ({}) => {
             value={String(selectedQuantity)}
           >
             <option value="">Quantity</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
+            {quantityOptions.map((_, index) => (
+              <option
+                key={`quantity-${selectedRate?.id}-${index}`}
+                value={index + 1}
+              >
+                {index + 1}
+              </option>
+            ))}
           </select>
         </div>
       </div>
