@@ -1,6 +1,6 @@
 import { FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +15,7 @@ import {
   getSelectedRate,
 } from "../modules/events/store/selectors";
 import { Input } from "../components/input.component";
+import { setConfirmationCode } from "../modules/events/store/slice";
 
 interface OrderPageProps {}
 
@@ -33,6 +34,7 @@ type DetailsSchemaValues = z.infer<typeof detailsSchema>;
 
 export const OrderPage: FC<OrderPageProps> = ({}) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const choosenEventId = useSelector(getChosenEventId);
   const selectedRate = useSelector(getSelectedRate);
@@ -52,6 +54,7 @@ export const OrderPage: FC<OrderPageProps> = ({}) => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm<DetailsSchemaValues>({
     defaultValues: {
       name: "",
@@ -67,25 +70,33 @@ export const OrderPage: FC<OrderPageProps> = ({}) => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    const [firstName, ...restName] = data.name.split(" ");
-    const lastName = restName.join(" ");
+    try {
+      const [firstName, ...restName] = data.name.split(" ");
+      const lastName = restName.join(" ");
 
-    const order = await createOrder({
-      rate: selectedRate!.id,
-      quantity: selectedQuantity!,
-      card: {
-        nameOnCard: data.cardholderName,
-        expires: data.cardExpiration,
-        number: data.cardNumber,
-        cvv: data.cardCvv,
-      },
-      user: {
-        firstName: firstName,
-        lastName: lastName,
-        email: data.email,
-        phone: data.phone,
-      },
-    });
+      const order = await createOrder({
+        rate: selectedRate!.id,
+        quantity: selectedQuantity!,
+        card: {
+          nameOnCard: data.cardholderName,
+          expires: data.cardExpiration,
+          number: data.cardNumber,
+          cvv: data.cardCvv,
+        },
+        user: {
+          firstName: firstName,
+          lastName: lastName,
+          email: data.email,
+          phone: data.phone,
+        },
+      }).unwrap();
+
+      dispatch(setConfirmationCode(order.confirmationCode));
+
+      navigate("/success", { replace: true });
+    } catch (e) {
+      console.log(e);
+    }
   });
 
   const goBack = () => {
