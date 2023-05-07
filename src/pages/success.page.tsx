@@ -1,6 +1,6 @@
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Layout } from "../components/layout.component";
 import { useGetSingleEventQuery } from "../modules/events/api/repository";
 import {
@@ -86,9 +86,9 @@ export const SuccessPage: FC<SuccessPageProps> = ({}) => {
         </div>
         <hr />
         <div className="text-right">
-          <a className="btn btn-primary btn-lg" href="index.html" role="button">
+          <Link className="btn btn-primary btn-lg" to="/" role="button">
             Back to home
-          </a>
+          </Link>
         </div>
       </div>
     </Layout>
