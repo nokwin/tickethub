@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useGetSingleEventQuery,
   useLazyGetRateBySectorQuery,
@@ -23,6 +23,7 @@ interface EventFormProps {}
 
 export const EventForm: FC<EventFormProps> = ({}) => {
   const params = useParams();
+  const navigate = useNavigate();
 
   const event = useGetSingleEventQuery(Number(params.id));
   const [triggerSectorsQuery, sectors] = useLazyGetSectorsByEventQuery();
@@ -77,6 +78,10 @@ export const EventForm: FC<EventFormProps> = ({}) => {
   const quantityOptions = useMemo(() => {
     return new Array(selectedRate?.max || 0).fill(0);
   }, [selectedRate?.max]);
+
+  const goToCheckout = () => {
+    navigate("/order");
+  };
 
   return (
     <div className="row">
@@ -160,6 +165,7 @@ export const EventForm: FC<EventFormProps> = ({}) => {
             !selectedRate ||
             !selectedQuantity
           }
+          onClick={goToCheckout}
         >
           BUY
         </button>{" "}
