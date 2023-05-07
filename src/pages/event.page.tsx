@@ -9,10 +9,16 @@ import { Layout } from "../components/layout.component";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getSelectedDate,
+  getSelectedQuantity,
   getSelectedRate,
   getSelectedSector,
 } from "../modules/events/store/selectors";
-import { setEventDate, setEventRate, setEventSector } from "../modules/events/store/slice";
+import {
+  setEventDate,
+  setEventQuantity,
+  setEventRate,
+  setEventSector,
+} from "../modules/events/store/slice";
 
 interface EventPageProps {}
 
@@ -27,6 +33,7 @@ export const EventPage: FC<EventPageProps> = ({}) => {
   const selectedDate = useSelector(getSelectedDate);
   const selectedSector = useSelector(getSelectedSector);
   const selectedRate = useSelector(getSelectedRate);
+  const selectedQuantity = useSelector(getSelectedQuantity);
 
   if (event.isLoading) {
     return (
@@ -57,6 +64,11 @@ export const EventPage: FC<EventPageProps> = ({}) => {
   const handleRateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const rateId = Number(e.target.value);
     dispatch(setEventRate(rateId));
+  };
+
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const quantity = Number(e.target.value);
+    dispatch(setEventQuantity(quantity));
   };
 
   return (
@@ -127,14 +139,24 @@ export const EventPage: FC<EventPageProps> = ({}) => {
         </div>
         <div className="col-sm-2">
           <div className="form-group">
-            <select name="" id="" className="form-control" disabled>
+            <select
+              className="form-control"
+              disabled={!selectedRate}
+              onChange={handleQuantityChange}
+              value={String(selectedQuantity)}
+            >
               <option value="">Quantity</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
             </select>
           </div>
         </div>
         <div className="col-sm-2">
           {" "}
-          <button className="btn btn-primary btn-block" disabled>
+          <button className="btn btn-primary btn-block" disabled={!selectedDate || !selectedSector || !selectedRate || !selectedQuantity}>
             BUY
           </button>{" "}
         </div>
