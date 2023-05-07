@@ -5,8 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Layout } from "../components/layout.component";
-import { useGetSingleEventQuery } from "../modules/events/api/repository";
-import { getChosenEventId } from "../modules/events/store/selectors";
+import {
+  useCreateOrderMutation,
+  useGetSingleEventQuery,
+} from "../modules/events/api/repository";
+import {
+  getChosenEventId,
+  getSelectedQuantity,
+  getSelectedRate,
+} from "../modules/events/store/selectors";
 import { Input } from "../components/input.component";
 
 interface OrderPageProps {}
@@ -28,20 +35,23 @@ export const OrderPage: FC<OrderPageProps> = ({}) => {
   const navigate = useNavigate();
 
   const choosenEventId = useSelector(getChosenEventId);
+  const selectedRate = useSelector(getSelectedRate);
+  const selectedQuantity = useSelector(getSelectedQuantity);
   useEffect(() => {
-    if (!choosenEventId) {
-      // navigate("/", { replace: true });
+    if (!choosenEventId || !selectedRate || !selectedQuantity) {
+      navigate("/", { replace: true });
     }
   }, []);
 
   const event = useGetSingleEventQuery(choosenEventId || 0, {
     skip: !choosenEventId,
   });
+  const [createOrder] = useCreateOrderMutation();
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<DetailsSchemaValues>({
     defaultValues: {
       name: "",
@@ -56,8 +66,26 @@ export const OrderPage: FC<OrderPageProps> = ({}) => {
     resolver: zodResolver(detailsSchema),
   });
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const onSubmit = handleSubmit(async (data) => {
+    const [firstName, ...restName] = data.name.split(" ");
+    const lastName = restName.join(" ");
+
+    const order = await createOrder({
+      rate: selectedRate!.id,
+      quantity: selectedQuantity!,
+      card: {
+        nameOnCard: data.cardholderName,
+        expires: data.cardExpiration,
+        number: data.cardNumber,
+        cvv: data.cardCvv,
+      },
+      user: {
+        firstName: firstName,
+        lastName: lastName,
+        email: data.email,
+        phone: data.phone,
+      },
+    });
   });
 
   const goBack = () => {
@@ -156,7 +184,11 @@ export const OrderPage: FC<OrderPageProps> = ({}) => {
           </div>
           <div className="col-xs-6">
             {" "}
-            <button className="btn btn-primary btn-block btn-lg" type="submit">
+            <button
+              className="btn btn-primary btn-block btn-lg"
+              type="submit"
+              disabled={isSubmitting}
+            >
               Pay
             </button>{" "}
           </div>
